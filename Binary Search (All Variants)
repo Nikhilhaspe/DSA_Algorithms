@@ -1,0 +1,169 @@
+*********************************************************************************** Iterative Binary Search ****************************************************************************************
+// 1. Iterative Binary Search
+// TC: O(logn)
+// SC: O(1)
+// Link: https://leetcode.com/problems/binary-search/description/
+
+class Solution {
+    public int search(int[] nums, int target) {
+        int lb=0, ub=nums.length-1, mid;
+
+        while(lb <= ub){
+            // If we add INT_MAX with INT_MAX to avoid int overflow case, maybe we could have used long here as well.
+            mid = lb + (ub-lb)/2;
+
+            if(nums[mid] == target)
+                return mid;
+            else if(nums[mid] > target)
+                ub = mid - 1;
+            else                              // if(nums[mid] < target)
+                lb = mid + 1;
+        }
+
+        return -1;
+    }
+}
+
+************************************************************************************* Recursive Binary Search ******************************************************************************************
+// 2. Recursive Binary Search
+// TC: O(logn)
+// SC: O(logn) (Only for system stack not any auxiallary space required by the algorithm)
+// Link: https://leetcode.com/problems/binary-search/description/
+
+class Solution {
+    public int binSearch(int[] nums, int target, int lb, int ub){
+        if(lb > ub){
+            return -1;
+        }
+
+        // If we add INT_MAX with INT_MAX to avoid int overflow case, maybe we could have used long here as well.
+        int mid = lb + (ub-lb)/2;
+        if(nums[mid] == target)
+            return mid;
+        else if(nums[mid] > target)
+            return binSearch(nums, target, lb, mid-1);
+        else
+            return binSearch(nums, target, mid+1, ub);
+    }
+
+    public int search(int[] nums, int target) {
+        return binSearch(nums, target, 0, nums.length-1);
+    }
+}
+
+********************************************************************************** Practice Problems *********************************************************************************************************
+********************************************************************************** Lower Bound Binary Search ****************************************************************************************
+// 1. Lower Bound Binary Search
+// Lower bound means:
+// Smallest index such that arr[ind] >= target
+// TC: O(logn)
+// SC: O(1)
+
+public class Main {
+    public static int findLb(int[] arr, int target){
+        int lb=0, ub=arr.length-1, mid;
+        int index = arr.length;
+
+        while(lb <= ub){
+            mid = lb + (ub - lb) / 2;
+            
+            if(arr[mid] >= target){
+                index = mid;
+                ub = mid - 1;
+            }else{
+                lb = mid + 1;
+            }
+        }
+
+        return index;       
+    }
+    
+    public static void main(String[] args) {
+        int[] arr = {1,2,3,5,6,8,12,22};
+        System.out.println(findLb(arr, 20));
+    }
+}
+
+************************************************************************************ Upper Bound Binary Search ************************************************************************************
+// 2. Upper bound binary search
+// Upper bound means:
+// Smallest index such that arr[mid] > target
+// TC: O(logn)
+// SC: O(1)
+
+public class Main {
+    public static int findUb(int[] arr, int target){
+        int lb=0, ub=arr.length-1, mid;
+        int index = arr.length;
+
+        while(lb <= ub){
+            mid = lb + (ub - lb) / 2;
+            
+            if(arr[mid] > target){
+                index = mid;
+                ub = mid - 1;
+            }else{
+                lb = mid + 1;
+            }
+        }
+
+        return index;       
+    }
+    
+    public static void main(String[] args) {
+        int[] arr = {1,2,3,5,6,8,12,22};
+        System.out.println(findUb(arr, 7));
+    }
+}
+
+*************************************************************************************** Floor and ceiling using Binary search *************************************************************************
+// Problem Link: https://www.naukri.com/code360/problems/ceiling-in-a-sorted-array_1825401?leftPanelTabValue=PROBLEM
+// TC: O(logn)
+// SC: O(1)
+
+import java.util.* ;
+import java.io.*; 
+
+public class Solution {
+    public static int getFloor(int[] arr, int n, int target){
+      int lb=0, ub=n-1, mid, floorVal=-1;
+
+      while(lb <= ub){
+        mid = lb + (ub-lb)/2;
+
+        if(arr[mid] <= target){
+          floorVal = arr[mid];
+          lb = mid + 1;
+        }else{
+          ub = mid - 1;
+        }
+      }
+
+      return floorVal;
+    }
+
+    public static int getCeiling(int[] arr, int n, int target){
+      int lb=0, ub=n-1, mid, ceilingVal=-1;
+
+      while(lb <= ub){
+        mid = lb + (ub-lb)/2;
+
+        if(arr[mid] >= target){
+          ub = mid - 1;
+          ceilingVal = arr[mid];
+        }else{
+          lb = mid + 1;
+        }
+      }
+
+      return ceilingVal;
+    }
+
+    public static int[] getFloorAndCeil(int[] arr, int n, int x) {
+       int[] res = new int[2];
+       res[0] = getFloor(arr, n, x);
+       res[1] = getCeiling(arr, n, x);
+
+       return res;
+    }
+}
